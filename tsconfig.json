@@ -1,9 +1,8 @@
 {
   "compilerOptions": {
-    "target": "es2018",
+    "target": "ES5",
     "module": "commonjs",
-    "outDir": "dist",
-    "strict": true
+    "outDir": "dist"
   },
   "include": [
     "src/**/*.ts"
