@@ -1,4 +1,5 @@
 import { main as nodeMain } from './node';
+import { main as golangMain } from './golang';
 import * as fs from 'fs';
 
 interface EcosystemStrategy {
@@ -20,11 +21,27 @@ class NodeEcosystemStrategy implements EcosystemStrategy {
   }
 }
 
+class GolangEcosystemStrategy implements EcosystemStrategy {
+  async execute(options: Record<string, any>): Promise<void> {
+    const { outputPath } = options;
+    const snapshot = await golangMain();
+
+    if (outputPath) {
+      fs.writeFileSync(outputPath, JSON.stringify(snapshot));
+    } else {
+      console.error(
+        'Output file path is not provided. Please set the "output" environment variable.'
+      );
+    }
+  }
+}
+
 const ecosystemStrategies: Record<string, EcosystemStrategy> = {
-  node: new NodeEcosystemStrategy()
+  node: new NodeEcosystemStrategy(),
+  golang: new GolangEcosystemStrategy()
 };
 
-export function handleMain() {
+export async function handleMain() {
   const ecosystem = process.env.DSD_ECOSYSTEM || 'node';
   const strategy = ecosystemStrategies[ecosystem];
 
@@ -33,7 +50,7 @@ export function handleMain() {
       outputPath: process.env.DSD_OUTPUT || ''
     };
 
-    strategy.execute(options);
+    await strategy.execute(options);
   } else {
     console.error(`Unsupported ECOSYSTEM value: ${ecosystem}`);
   }
