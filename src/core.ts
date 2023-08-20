@@ -44,7 +44,9 @@ const ecosystemStrategies: Record<string, EcosystemStrategy> = {
 export async function handleMain() {
   const ecosystem = process.env.DSD_ECOSYSTEM || 'node';
   const strategy = ecosystemStrategies[ecosystem];
-  console.log(`current using ecosystem: ${ecosystem}, matches stratgy: ${strategy}`)
+  console.log(
+    `current using ecosystem: ${ecosystem}, matches stratgy: ${strategy}`
+  );
 
   if (strategy) {
     const options = {

@@ -1,11 +1,12 @@
 #!/usr/bin/env node
 import { handleMain } from './core';
+import { handleDiff } from './diff';
 
 const { program } = require('commander');
 
 program
   .command('dump')
-  .description('Description for command1')
+  .description('dump dependency-submission object')
   .action(() => {
     handleMain().catch((error) => {
       console.error(error);
@@ -14,10 +15,11 @@ program
 
 program
   .command('diff')
-  .description('Description for command2')
+  .description('diff between dependency-submission')
   .action(() => {
-    console.log('Running command2');
-    // 命令2的处理逻辑
+    handleDiff().catch((error) => {
+      console.error(error);
+    });
   });
 
 program.parse(process.argv);

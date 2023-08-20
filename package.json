@@ -23,7 +23,8 @@
   },
   "homepage": "https://github.com/williamfzc/dependency-submission-dump#readme",
   "dependencies": {
-    "@github/dependency-submission-toolkit": "^1.2.10"
+    "@github/dependency-submission-toolkit": "^1.2.10",
+    "jsondiffpatch": "^0.4.1"
   },
   "devDependencies": {
     "@types/jest": "^29.5.3",
