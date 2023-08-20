@@ -9,7 +9,7 @@ import {
 describe('processGoDirectDependencies', () => {
   test('run in go-example', async () => {
     const purls = await processGoDirectDependencies(
-      'go-example',
+      'testdata/go-example',
       'cmd/octocat.go'
     );
     expect(purls).toHaveLength(1);
@@ -29,7 +29,7 @@ describe('processGoDirectDependencies', () => {
 describe('processGoIndirectDependencies', () => {
   test('run in go-example', async () => {
     const purls = await processGoIndirectDependencies(
-      'go-example',
+      'testdata/go-example',
       'cmd/octocat.go'
     );
     expect(purls).toHaveLength(3);
@@ -65,14 +65,14 @@ describe('processGoIndirectDependencies', () => {
 describe('processGoGraph', () => {
   test.only('run in go-example', async () => {
     const directDeps = await processGoDirectDependencies(
-      'go-example',
+      'testdata/go-example',
       'cmd/octocat.go'
     );
     const indirectDeps = await processGoIndirectDependencies(
-      'go-example',
+      'testdata/go-example',
       'cmd/octocat.go'
     );
-    const cache = await processGoGraph('go-example', directDeps, indirectDeps);
+    const cache = await processGoGraph('testdata/go-example', directDeps, indirectDeps);
 
     // we expect the number of direct dependencies + indirect
     expect(cache.countPackages()).toEqual(4);
