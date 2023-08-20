@@ -3,7 +3,11 @@
     "target": "ES5",
     "module": "commonjs",
     "outDir": "dist",
+    "declaration": true,
     "esModuleInterop": true,
+    "strict": true,
+    "noImplicitAny": true,
+    "sourceMap": true
   },
   "include": [
     "src/**/*.ts"

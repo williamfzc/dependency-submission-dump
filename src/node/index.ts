@@ -112,7 +112,7 @@ export function createBuildTarget(npmPackage: NpmPackage): BuildTarget {
 // configured to avoid issues present with parsing package-lock.json (such as
 // inclusion of workspace packages). This is provided as example to help guide
 // development.
-export async function main() {
+export async function main(): Promise<Snapshot | undefined> {
   const npmPackageDirectory = core.getInput('npm_package_directory');
   const prodPackages = await exec.getExecOutput(
     'npm',

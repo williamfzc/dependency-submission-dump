@@ -10,7 +10,7 @@ import {
   processGoIndirectDependencies
 } from './process';
 
-export async function main() {
+export async function main(): Promise<Snapshot | undefined> {
   const goModPath = path.normalize(
     core.getInput('go_mod_path', { required: true })
   );

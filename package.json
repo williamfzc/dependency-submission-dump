@@ -10,7 +10,7 @@
     "start": "ts-node src/index.ts",
     "lint": "prettier --config .prettierrc 'src/**/*.ts' --write",
     "test": "jest",
-    "build": "ncc build src/index.ts -o dist"
+    "build": "babel src --out-dir dist && ncc build dist/index.js -o dist"
   },
   "repository": {
     "type": "git",
@@ -27,6 +27,11 @@
     "jsondiffpatch": "^0.4.1"
   },
   "devDependencies": {
+    "@babel/cli": "^7.22.10",
+    "@babel/core": "^7.22.10",
+    "@babel/plugin-transform-modules-commonjs": "^7.22.5",
+    "@babel/preset-env": "^7.22.10",
+    "@babel/preset-typescript": "^7.22.5",
     "@types/jest": "^29.5.3",
     "@types/node": "^20.5.1",
     "commander": "^11.0.0",

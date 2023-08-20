@@ -9,13 +9,13 @@ interface EcosystemStrategy {
 }
 
 class NodeEcosystemStrategy implements EcosystemStrategy {
-  async execute(options: Options): Promise<Snapshot> {
+  async execute(options: Options): Promise<Snapshot | undefined> {
     return nodeMain();
   }
 }
 
 class GolangEcosystemStrategy implements EcosystemStrategy {
-  async execute(options: Options): Promise<Snapshot> {
+  async execute(options: Options): Promise<Snapshot | undefined> {
     return golangMain();
   }
 }
@@ -32,7 +32,10 @@ class Options {
   }
 }
 
-async function postDispatch(options: Options, snapshot: any): Promise<void> {
+async function postDispatch(options: Options, snapshot: Snapshot): Promise<void> {
+  if (!snapshot) {
+    console.error("snapshot is empty, something error")
+  }
   if (options.addonPath) {
     const addonPath = path.resolve(options.addonPath);
     const addonScript = require(addonPath);
@@ -56,7 +59,8 @@ export async function dispatchOptions(ops: Options) {
 
   if (strategy) {
     const snapshot = await strategy.execute(ops);
-    await postDispatch(ops, snapshot);
+      await postDispatch(ops, snapshot);
+  
   } else {
     console.error(`Unsupported ECOSYSTEM value: ${ops.ecosystem}`);
   }
