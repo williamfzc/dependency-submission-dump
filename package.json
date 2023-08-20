@@ -1,6 +1,6 @@
 {
   "name": "dependency-submission-dump",
-  "version": "1.0.0",
+  "version": "0.2.1",
   "description": "",
   "main": "src/index.ts",
   "bin": {
@@ -10,7 +10,7 @@
     "start": "ts-node src/index.ts",
     "lint": "prettier --config .prettierrc 'src/**/*.ts' --write",
     "test": "jest",
-    "build": "babel src --out-dir dist && ncc build dist/index.js -o dist"
+    "build": "babel src --out-dir dist --extensions .ts,.tsx && ncc build dist/index.js -o dist"
   },
   "repository": {
     "type": "git",
