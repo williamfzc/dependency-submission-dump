@@ -15,7 +15,7 @@ class NodeEcosystemStrategy implements EcosystemStrategy {
       fs.writeFileSync(outputPath, JSON.stringify(snapshot));
     } else {
       console.error(
-        'Output file path is not provided. Please set the "output" environment variable.'
+        'Output file path is not provided. Please set the "DSD_OUTPUT" environment variable.'
       );
     }
   }
@@ -30,7 +30,7 @@ class GolangEcosystemStrategy implements EcosystemStrategy {
       fs.writeFileSync(outputPath, JSON.stringify(snapshot));
     } else {
       console.error(
-        'Output file path is not provided. Please set the "output" environment variable.'
+        'Output file path is not provided. Please set the "DSD_OUTPUT" environment variable.'
       );
     }
   }
@@ -44,6 +44,7 @@ const ecosystemStrategies: Record<string, EcosystemStrategy> = {
 export async function handleMain() {
   const ecosystem = process.env.DSD_ECOSYSTEM || 'node';
   const strategy = ecosystemStrategies[ecosystem];
+  console.log(`current using ecosystem: ${ecosystem}, matches stratgy: ${strategy}`)
 
   if (strategy) {
     const options = {
