@@ -3,11 +3,11 @@ import { main as golangMain } from './golang';
 import * as fs from 'fs';
 
 interface EcosystemStrategy {
-  execute(options: Record<string, any>): Promise<void>;
+  execute(options: Options): Promise<void>;
 }
 
 class NodeEcosystemStrategy implements EcosystemStrategy {
-  async execute(options: Record<string, any>): Promise<void> {
+  async execute(options: Options): Promise<void> {
     const { outputPath } = options;
     const snapshot = await nodeMain();
 
@@ -22,7 +22,7 @@ class NodeEcosystemStrategy implements EcosystemStrategy {
 }
 
 class GolangEcosystemStrategy implements EcosystemStrategy {
-  async execute(options: Record<string, any>): Promise<void> {
+  async execute(options: Options): Promise<void> {
     const { outputPath } = options;
     const snapshot = await golangMain();
 
@@ -36,25 +36,38 @@ class GolangEcosystemStrategy implements EcosystemStrategy {
   }
 }
 
+class Options {
+  outputPath: string;
+  ecosystem: string;
+
+  constructor(outputPath: string, ecosystem: string) {
+    this.outputPath = outputPath;
+    this.ecosystem = ecosystem;
+  }
+}
+
 const ecosystemStrategies: Record<string, EcosystemStrategy> = {
   node: new NodeEcosystemStrategy(),
   golang: new GolangEcosystemStrategy()
 };
 
-export async function handleMain() {
-  const ecosystem = process.env.DSD_ECOSYSTEM || 'node';
-  const strategy = ecosystemStrategies[ecosystem];
+export async function dispatchOptions(ops: Options) {
+  const strategy = ecosystemStrategies[ops.ecosystem];
   console.log(
-    `current using ecosystem: ${ecosystem}, matches stratgy: ${strategy}`
+    `Currently using ecosystem: ${ops.ecosystem}, matching strategy: ${strategy}`
   );
 
   if (strategy) {
-    const options = {
-      outputPath: process.env.DSD_OUTPUT || ''
-    };
-
-    await strategy.execute(options);
+    await strategy.execute(ops);
   } else {
-    console.error(`Unsupported ECOSYSTEM value: ${ecosystem}`);
+    console.error(`Unsupported ECOSYSTEM value: ${ops.ecosystem}`);
   }
+}
+
+export async function handleMain() {
+  const options = new Options(
+    process.env.DSD_OUTPUT || '',
+    process.env.DSD_ECOSYSTEM || 'node'
+  );
+  return dispatchOptions(options);
 }
