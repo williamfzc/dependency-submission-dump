@@ -1,73 +1,83 @@
 import { main as nodeMain } from './node';
 import { main as golangMain } from './golang';
 import * as fs from 'fs';
+import * as path from 'path';
+import { Snapshot } from '@github/dependency-submission-toolkit';
 
 interface EcosystemStrategy {
-  execute(options: Options): Promise<void>;
+  execute(options: Options): Promise<any>;
 }
 
 class NodeEcosystemStrategy implements EcosystemStrategy {
-  async execute(options: Options): Promise<void> {
-    const { outputPath } = options;
-    const snapshot = await nodeMain();
-
-    if (outputPath) {
-      fs.writeFileSync(outputPath, JSON.stringify(snapshot));
-    } else {
-      console.error(
-        'Output file path is not provided. Please set the "DSD_OUTPUT" environment variable.'
-      );
-    }
+  async execute(options: Options): Promise<Snapshot> {
+    return nodeMain();
   }
 }
 
 class GolangEcosystemStrategy implements EcosystemStrategy {
-  async execute(options: Options): Promise<void> {
-    const { outputPath } = options;
-    const snapshot = await golangMain();
-
-    if (outputPath) {
-      fs.writeFileSync(outputPath, JSON.stringify(snapshot));
-    } else {
-      console.error(
-        'Output file path is not provided. Please set the "DSD_OUTPUT" environment variable.'
-      );
-    }
+  async execute(options: Options): Promise<Snapshot> {
+    return golangMain();
   }
 }
 
 class Options {
   outputPath: string;
   ecosystem: string;
+  addonPath: string;
 
-  constructor(outputPath: string, ecosystem: string) {
+  constructor(outputPath: string, ecosystem: string, addonPath: string) {
     this.outputPath = outputPath;
     this.ecosystem = ecosystem;
+    this.addonPath = addonPath;
   }
 }
 
-const ecosystemStrategies: Record<string, EcosystemStrategy> = {
-  node: new NodeEcosystemStrategy(),
-  golang: new GolangEcosystemStrategy()
-};
+async function postDispatch(options: Options, snapshot: any): Promise<void> {
+  if (options.addonPath) {
+    const addonPath = path.resolve(options.addonPath);
+    const addonScript = require(addonPath);
+    addonScript["dsdHandler"](snapshot);
+  }
+
+  if (options.outputPath) {
+    fs.writeFileSync(options.outputPath, JSON.stringify(snapshot));
+  } else {
+    console.error(
+      'Output file path is not provided. Please set the "DSD_OUTPUT" environment variable.'
+    );
+  }
+}
 
 export async function dispatchOptions(ops: Options) {
-  const strategy = ecosystemStrategies[ops.ecosystem];
+  const strategy = getEcosystemStrategy(ops.ecosystem);
   console.log(
     `Currently using ecosystem: ${ops.ecosystem}, matching strategy: ${strategy}`
   );
 
   if (strategy) {
-    await strategy.execute(ops);
+    const snapshot = await strategy.execute(ops);
+    await postDispatch(ops, snapshot);
   } else {
     console.error(`Unsupported ECOSYSTEM value: ${ops.ecosystem}`);
+  }
+}
+
+function getEcosystemStrategy(ecosystem: string): EcosystemStrategy | undefined {
+  switch (ecosystem) {
+    case 'node':
+      return new NodeEcosystemStrategy();
+    case 'golang':
+      return new GolangEcosystemStrategy();
+    default:
+      return undefined;
   }
 }
 
 export async function handleMain() {
   const options = new Options(
     process.env.DSD_OUTPUT || '',
-    process.env.DSD_ECOSYSTEM || 'node'
+    process.env.DSD_ECOSYSTEM || 'node',
+    process.env.DSD_ADDON || ''
   );
   return dispatchOptions(options);
 }
