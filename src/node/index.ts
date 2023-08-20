@@ -117,7 +117,7 @@ export async function main() {
   const prodPackages = await exec.getExecOutput(
     'npm',
     ['list', '--prod', '--all', '--json'],
-    { cwd: npmPackageDirectory }
+    { cwd: npmPackageDirectory, silent: true }
   );
   if (prodPackages.exitCode !== 0) {
     core.error(prodPackages.stderr);

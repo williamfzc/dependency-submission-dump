@@ -13,7 +13,7 @@ export async function processGoGraph(
 ): Promise<PackageCache> {
   console.log(`Running 'go mod graph' in ${goModDir}`);
   const goModGraph = await exec.getExecOutput('go', ['mod', 'graph'], {
-    cwd: goModDir
+    cwd: goModDir, silent: true
   });
   if (goModGraph.exitCode !== 0) {
     core.error(goModGraph.stderr);
@@ -109,7 +109,7 @@ async function processGoList(
   const goList = await exec.getExecOutput(
     'go',
     ['list', '-deps', '-f', goListTemplate, goBuildTarget],
-    { cwd: goModDir }
+    { cwd: goModDir, silent: true }
   );
   if (goList.exitCode !== 0) {
     core.error(goList.stderr);
