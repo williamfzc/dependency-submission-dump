@@ -113,7 +113,7 @@ export function createBuildTarget(npmPackage: NpmPackage): BuildTarget {
 // inclusion of workspace packages). This is provided as example to help guide
 // development.
 export async function main() {
-  const npmPackageDirectory = core.getInput('npm-package-directory');
+  const npmPackageDirectory = core.getInput('npm_package_directory');
   const prodPackages = await exec.getExecOutput(
     'npm',
     ['list', '--prod', '--all', '--json'],

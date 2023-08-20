@@ -2,10 +2,7 @@ import path from 'path';
 import fs from 'fs';
 import * as core from '@actions/core';
 import * as github from '@actions/github';
-import {
-  Snapshot,
-  Manifest
-} from '@github/dependency-submission-toolkit';
+import { Snapshot, Manifest } from '@github/dependency-submission-toolkit';
 
 import {
   processGoGraph,
@@ -15,7 +12,7 @@ import {
 
 export async function main() {
   const goModPath = path.normalize(
-    core.getInput('go-mod-path', { required: true })
+    core.getInput('go_mod_path', { required: true })
   );
 
   if (path.basename(goModPath) !== 'go.mod' || !fs.existsSync(goModPath)) {
@@ -23,7 +20,7 @@ export async function main() {
   }
   const goModDir = path.dirname(goModPath);
 
-  let goBuildTarget = core.getInput('go-build-target');
+  let goBuildTarget = core.getInput('go_build_target');
 
   if (goBuildTarget !== 'all' && goBuildTarget !== './...') {
     if (!fs.existsSync(goBuildTarget)) {
