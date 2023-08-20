@@ -10,7 +10,7 @@ describe('main', () => {
     await handleMain();
 
     const filePath = path.resolve(__dirname, '..', outputPath);
-    console.log("filepath: " + filePath)
+    console.log('filepath: ' + filePath);
     const fileExists = fs.existsSync(filePath);
 
     expect(fileExists).toBe(true);

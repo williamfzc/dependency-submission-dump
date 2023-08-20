@@ -8,7 +8,7 @@
   },
   "scripts": {
     "start": "ts-node src/index.ts",
-    "lint": "prettier --config .prettierrc 'src/**/*.ts' 'test/**/*.ts' --write",
+    "lint": "prettier --config .prettierrc 'src/**/*.ts' --write",
     "test": "jest",
     "build": "ncc build src/index.ts -o dist"
   },

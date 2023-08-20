@@ -1,3 +1,6 @@
 #!/usr/bin/env node
 import { handleMain } from './core';
-handleMain();
+
+handleMain().catch((error) => {
+  console.error(error);
+});
