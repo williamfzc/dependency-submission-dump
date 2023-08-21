@@ -4,9 +4,9 @@ A simple TypeScript library that enables local reuse of the GitHub's dependency-
 
 ## Why
 
-[GitHub's dependency-submission-api](https://docs.github.com/en/code-security/supply-chain-security/understanding-your-software-supply-chain/about-the-dependency-graph) is a good abstraction for managing dependencenies above different languages. 
+[GitHub's dependency-submission-api](https://docs.github.com/en/code-security/supply-chain-security/understanding-your-software-supply-chain/about-the-dependency-graph) is a good abstraction for managing dependencenies above different languages. Also GitHub provides some tools for extracting [snapshot](https://github.com/github/dependency-submission-toolkit/blob/main/src/snapshot.ts) from codebase, like [dependency-submission-toolkit](https://github.com/github/dependency-submission-toolkit), and its ecosystems.
 
-Also GitHub provides some tools for extracting [snapshot](https://github.com/github/dependency-submission-toolkit/blob/main/src/snapshot.ts) from codebase, like [dependency-submission-toolkit](https://github.com/github/dependency-submission-toolkit), and its ecosystems.
+<img width="969" alt="image" src="https://github.com/williamfzc/dependency-submission-dump/assets/13421694/64714040-8a3c-4e54-b410-619eef6e4e75">
 
 But by default, all these tools will always submit `snapshot` directly to GitHub without any switches to control. These is no way to reuse this abstraction.
 
