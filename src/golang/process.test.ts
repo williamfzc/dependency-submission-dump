@@ -72,7 +72,11 @@ describe('processGoGraph', () => {
       'testdata/go-example',
       'cmd/octocat.go'
     );
-    const cache = await processGoGraph('testdata/go-example', directDeps, indirectDeps);
+    const cache = await processGoGraph(
+      'testdata/go-example',
+      directDeps,
+      indirectDeps
+    );
 
     // we expect the number of direct dependencies + indirect
     expect(cache.countPackages()).toEqual(4);

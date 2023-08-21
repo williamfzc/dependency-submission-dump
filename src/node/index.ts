@@ -117,12 +117,13 @@ export async function main(): Promise<Snapshot | undefined> {
   const prodPackages = await exec.getExecOutput(
     'npm',
     ['list', '--prod', '--all', '--json'],
-    { cwd: npmPackageDirectory, silent: true }
+    { cwd: npmPackageDirectory, silent: true, ignoreReturnCode: true }
   );
   if (prodPackages.exitCode !== 0) {
-    core.error(prodPackages.stderr);
+    core.error(`npm list returns non-zero value: ${prodPackages.stderr}`);
     core.setFailed("'npm ls' failed!");
-    return;
+    // we still continue because it maybe a validation error
+    // https://github.com/npm/npm/issues/17624
   }
   const npmPackage = JSON.parse(prodPackages.stdout) as NpmPackage;
   const buildTarget = createBuildTarget(npmPackage);
